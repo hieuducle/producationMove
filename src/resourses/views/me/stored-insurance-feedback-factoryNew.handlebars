@@ -1,0 +1,157 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">ProducationMove</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            
+            Cơ sở sản xuất 2
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {{!-- <a class="dropdown-item" href="/product_lines/create">Thêm sản phẩm</a>
+            <div class="dropdown-divider"></div> --}}
+
+            <a class="dropdown-item" href="/me/stored/factoryNew">Quản lí dòng sản phẩm</a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item" href="/me/stored/factoryWarehouseNew">Sản phẩm trong kho</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/stored/insuranceFeedbackFactoryNew">Sản phẩm nhận từ TTBH</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/">Đăng xuất</a>
+            
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{{!-- {{> header}} --}}
+<div class="mt-4">
+  
+    <div>
+      <h3>Dòng sản phẩm</h3>
+      <a href="/me/trash/product_lines">Thùng rác ({{deletedCount}})</a>
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Mã khách hàng</th>
+                <th scope="col">Tên khách hàng</th>
+                <th scope="col" >Tên sản phẩm đã mua</th>
+                <th scope="col" colspan="2">Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each insuranceFeedbackFactoryNews}}
+            <tr>
+               <th scope="row">{{ @index }}</th>
+                <td>{{this.code}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.product}}</td>
+                <td>{{this.status}}</td>
+                <td>
+                    {{!-- <a href="/insuranceFeedbackFactoryNews/{{this._id}}/edit" class="btn btn-link">Sửa</a> --}}
+                    {{!-- <a href="" class="btn btn-link" data-toggle="modal" data-name="{{this.name}}" data-id="{{this._id}}" data-target="#delete-course-modal">Xóa</a> --}}
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-course-modal">Xóa</a>
+                    {{!-- <a href="" class="btn btn-link btn-delivery"  data-id="{{this._id}}"  onclick="deliveryOnclick()">
+                      <span class="note-delivery"> Gửi lại sản phẩm cho khách hàng</span>
+                    </a> --}}
+                </td>
+            </tr>
+
+            {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                Bạn chưa đăng sản phẩm nào.
+                <a href="/insuranceFeedbackFactoryNews/create">Tạo sản phẩm</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete course --}}
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa sản phẩm?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa sản phẩm này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Delete hidden form --}}
+<form name="delete-course-form" method="POST"></form>
+<form name="delivery-course-form" method="POST"></form>
+<script>
+  
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var courseId;
+        var courseName;
+        var deleteForm = document.forms['delete-course-form'];
+        var deliveryForm = document.forms['delivery-course-form'];
+        var btnDeleteCourse = document.getElementById('btn-delete-course');
+        var deliveryBtn = $('.btn-delivery');
+        // When dialog confirm clicked
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            courseId = button.data('id');
+            courseName = button.data('name');
+        });
+        console.log(courseName);
+        
+        // When delete course btn clicked
+        btnDeleteCourse.onclick = function () {
+            deleteForm.action = '/insuranceFeedbackFactoryNews/' + courseId +'?_method=DELETE';            
+            deleteForm.submit();
+        }
+
+        
+        
+        
+        deliveryBtn.click(function (e) {
+          e.preventDefault();
+          var insuranceFeedbackFactoryNewsId = $(this).data('id');
+          deliveryForm.action = '/insuranceFeedbackFactoryNews/' + insuranceFeedbackFactoryNewsId + '/delivery?_method=PATCH';
+          deliveryForm.submit();
+          console.log('click');
+          
+          
+        });
+
+        
+    });
+
+   function deliveryOnclick() {
+      
+
+      var textDelivery = document.querySelector(".note-delivery");
+      textDelivery.innerHTML = "Đã vận chuyển";
+    }
+
+    
+  
+</script>

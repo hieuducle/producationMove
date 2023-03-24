@@ -1,0 +1,149 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">ProducationMove</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{!-- <img src="https://avatar-redirect.appspot.com/google/109023826614717592641?size=400" alt="" class="user-avatar"> --}}
+            Admin
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            
+
+            {{!-- <a class="dropdown-item" href="/customerNews/create">Thêm khách hàng</a> --}}
+            
+{{!-- <div class="dropdown-divider"></div> --}}
+            <a class="dropdown-item" href="/product_lines/create">Thêm sản phẩm</a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item" href="/me/stored/admin">Quản lí dòng sản phẩm</a>
+
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/stored/customerAdmins">Quản lí khách hàng đại lí 1</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/stored/customerAdminNews">Quản lí khách hàng đại lí 2</a>
+
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/">Đăng xuất</a>
+            
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+
+  <div class="mt-4">
+    <div>
+      <h3>Khách hàng</h3>
+      {{!-- <a href="/me/trash/courses">Thùng rác ({{deletedCount}})</a> --}}
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Mã khách hàng</th>
+                <th scope="col">Tên khách hàng</th>
+                <th scope="col" >Tên sản phẩm đã mua</th>
+                <th scope="col" colspan="2">Trạng thái</th>
+
+                
+            </tr>
+        </thead>
+        <tbody>
+            {{#each customerNews}}
+            <tr>
+                <th scope="row">{{ @index }}</th>
+                <td>{{this.code}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.product}}</td>
+                <td>{{this.status}}</td>
+                
+                {{!-- <td>{{this.createdAt}}</td> --}}
+                <td>
+                    
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#delete-course-modal">Xóa</a>
+                    
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                Bạn chưa có khách hàng nào.
+                <a href="/customerNews/create">Tạo khách hàng</a>
+              </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Confirm delete course --}}
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa khách hàng?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn chắc chắn muốn xóa khách hàng này?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa bỏ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- Delete hidden form --}}
+<form name="delete-course-form" method="POST"></form>
+<form name="delivery-course-form" method="POST"></form>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var courseId;
+        var courseName;
+        var deleteForm = document.forms['delete-course-form'];
+        var deliveryForm = document.forms['delivery-course-form'];
+        var btnDeleteCourse = document.getElementById('btn-delete-course');
+        var deliveryBtn = $('.btn-delivery');
+
+        // When dialog confirm clicked
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            courseId = button.data('id');
+        });
+        
+        // When delete course btn clicked
+        btnDeleteCourse.onclick = function () {
+            deleteForm.action = '/customerNews/' + courseId + '?_method=DELETE';
+            deleteForm.submit();
+        }
+
+        deliveryBtn.click(function (e) {
+          e.preventDefault();
+          var factoriesId = $(this).data('id');
+          deliveryForm.action = '/customerNews/' + factoriesId + '/delivery?_method=PATCH';
+          deliveryForm.submit();
+          console.log('click');
+          
+          
+        });
+    });
+</script>

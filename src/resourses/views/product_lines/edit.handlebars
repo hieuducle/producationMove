@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">ProducationMove</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{!-- <img src="https://avatar-redirect.appspot.com/google/109023826614717592641?size=400" alt="" class="user-avatar"> --}}
+            Admin
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            
+
+            {{!-- <a class="dropdown-item" href="/customers/create">Thêm khách hàng</a> --}}
+            
+{{!-- <div class="dropdown-divider"></div> --}}
+            <a class="dropdown-item" href="/product_lines/create">Thêm sản phẩm</a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item" href="/me/stored/admin">Quản lí dòng sản phẩm</a>
+
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/stored/customerAdmins">Quản lí khách hàng đại lí 1</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/stored/customerAdminNews">Quản lí khách hàng đại lí 2</a>
+
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/">Đăng xuất</a>
+            
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="mt-4">
+    <h3>Cập nhật sản phẩm</h3>
+
+            <form method="POST" action = "/product_lines/{{product_lines._id}}?_method=PUT">
+            <div class="form-group">
+            <label for="name">Tên sản phẩm</label>
+            <input type="text" class="form-control" value="{{product_lines.name}}" id="name" name="name">
+            {{!-- <input type="text" class="form-control" value="" id="name" name="name"> --}}
+            
+        </div>
+
+        <div class="form-group">
+            <label for="description">Mô tả</label>
+            <input type="text" class="form-control" value="{{product_lines.description}}" id="description" name="description">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu lại</button>
+        </form>
+</div>
